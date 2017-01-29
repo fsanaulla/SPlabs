@@ -5,7 +5,13 @@
 #include <windows.h>
 
 int main() {
-    printf("Hello");
-    bool res = CreateProcess();
+
+    STARTUPINFO cif;
+    PROCESS_INFORMATION pi;
+
+    ZeroMemory(&cif,sizeof(STARTUPINFO));
+
+    if (CreateProcess("path2App", NULL, NULL, NULL, FALSE, NULL, NULL, NULL, &cif, &pi)==TRUE)
+
     return 0;
 };
