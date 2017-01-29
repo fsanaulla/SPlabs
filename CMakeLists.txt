@@ -3,5 +3,7 @@ project(SPlabs)
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(SOURCE_FILES source/wc/WordCount.cpp)
+include_directories(resources/headers/windows.h)
+
+set(SOURCE_FILES source/wc/WordCount.c)
 add_executable(SPlabs ${SOURCE_FILES})
