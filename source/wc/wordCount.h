@@ -1,16 +1,12 @@
 #include <stdio.h>
 
-int main() {
+int wordCount(char c[]) {
     FILE *fp;
-    char filename[100];
     char ch;
-    int wn = 0;
-    int state = 0;
+    int wn, state;
+    wn = 0;
 
-    printf("Введіть шлях до файлу:");
-    scanf("%s", filename);
-
-    fp = fopen(filename, "r");
+    fp = fopen(c, "r");
     if (fp == NULL) perror("Can't open file\n");
     else {
         while ((ch = (char) getc(fp)) != EOF) {
@@ -21,7 +17,6 @@ int main() {
                 ++wn;
             }
         }
-        printf("Кількість слів: %d\n", wn);
-        return 0;
+        return wn;
     }
 }
