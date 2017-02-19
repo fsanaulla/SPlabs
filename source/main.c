@@ -1,19 +1,17 @@
 #include <malloc.h>
-#include "crypto/crypto.h"
+#include "crypto/crypto.c"
 
 int main() {
-    int len = 0;
-    char* test = "Fayaz";
-    len = (int) strlen(test);
-    char key[len];
+    char test[] = "Fayaz";
+    char key[] = "Fayaz";
 
-    encode(test, key);
-
+    encode((char *) &test, (char *) &key);
     printf("%s\n", test);
-
-//    decode(test, key);
 //
-//    printf("%s", test);
+//    decode((char *) &test);
+//    printf("%s\n", test);
+//    printf("%d\n", bitsCount('F'));
+//    printf("%d", betaFunc('F'));
 
     return 0;
 }
