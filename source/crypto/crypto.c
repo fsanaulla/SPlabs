@@ -1,19 +1,29 @@
 void encode(char *s, char *key);
-void decode(char *s);
+void decode(char *s, char *key);
 int bitsCount(int n);
 int betaFunc(int n);
 
+//todo fix bit shift error
 void encode(char *s, char *key) {
-    for (int i = 0; s[i] != '\0' ; ++i) {
-        s[i] <<= 1;
+    for (int i = 0; s[i] != '\0' ; i++) {
+//        s[i] <<= 1;
         s[i] |= bitsCount(s[i]);
+        key[i] = betaFunc(s[i]);
         s[i] ^= betaFunc(s[i]);
     }
 }
 
-void decode(char *s) {
-    for (int i = 0; s[i] != '\0' ; ++i) {
-        s[i] ^= 1;
+void decode(char *s, char *key) {
+    for (int i = 0; i < strlen(s); ++i) {
+        s[i] ^= key[i];
+    }
+}
+
+void testFunc(char *c, char *k) {
+    for (int i = 0; i < strlen(c); ++i) {
+        c[i] <<= 1;
+        c[i] |= bitsCount(c[i]);
+        k[i] ^= betaFunc(k[i]);
     }
 }
 

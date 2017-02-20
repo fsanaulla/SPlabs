@@ -5,13 +5,13 @@ int main() {
     char test[] = "Fayaz";
     char key[] = "Fayaz";
 
+    //encoding
     encode((char *) &test, (char *) &key);
     printf("%s\n", test);
-//
-//    decode((char *) &test);
-//    printf("%s\n", test);
-//    printf("%d\n", bitsCount('F'));
-//    printf("%d", betaFunc('F'));
+
+    //decoding
+    decode((char *) &test, (char *) &key);
+    printf("%s\n", test);
 
     return 0;
 }
