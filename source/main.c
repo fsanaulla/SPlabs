@@ -1,9 +1,12 @@
 #include <malloc.h>
+#include <memory.h>
 #include "crypto/crypto.c"
 
 int main() {
-    char test[] = "Fayaz";
-    char key[] = "Fayaz";
+    int len;
+    char test[] = "I Love VNTU(no)";
+    len = (int) strlen(test);
+    char key[len];
 
     //encoding
     encode((char *) &test, (char *) &key);

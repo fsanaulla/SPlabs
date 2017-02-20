@@ -1,15 +1,16 @@
 void encode(char *s, char *key);
 void decode(char *s, char *key);
-int bitsCount(int n);
-int betaFunc(int n);
+int bentFunc(int n);
+int polynomial(int n);
 
-//todo fix bit shift error
 void encode(char *s, char *key) {
+    int tmp, tmpKey;
     for (int i = 0; s[i] != '\0' ; i++) {
-//        s[i] <<= 1;
-        s[i] |= bitsCount(s[i]);
-        key[i] = betaFunc(s[i]);
-        s[i] ^= betaFunc(s[i]);
+        tmp = s[i] << 1;
+        tmp |= bentFunc(tmp);
+        tmpKey = poli(tmp);
+        key[i] = tmpKey;
+        s[i] ^= tmpKey;
     }
 }
 
@@ -19,23 +20,10 @@ void decode(char *s, char *key) {
     }
 }
 
-void testFunc(char *c, char *k) {
-    for (int i = 0; i < strlen(c); ++i) {
-        c[i] <<= 1;
-        c[i] |= bitsCount(c[i]);
-        k[i] ^= betaFunc(k[i]);
-    }
+int bentFunc(int n) {
+    return (n & 128) ^ (n & 32) ^ (n & 16) ^ (n & 2) ^ (n & 1);
 }
 
-int bitsCount(int n) {
-    int res = 0;
-    while (n) {
-        res += n & 1;
-        n >>= 1;
-    }
-    return res % 2;
-}
-
-int betaFunc(int n) {
-    return bitsCount(n & 240) ^ bitsCount(n & 112) ^ bitsCount(n & 7) ^ bitsCount(n & 6) ^ bitsCount(n & 24) ^ bitsCount(n & 1) ^ 1;
+int polynomial(int n) {
+    return (n & 240) ^ (n & 112) ^ (n & 7) ^ (n & 6) ^ (n & 24) ^ (n & 1) ^ 1;
 }
