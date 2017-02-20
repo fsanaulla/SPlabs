@@ -8,7 +8,7 @@ void encode(char *s, char *key) {
     for (int i = 0; s[i] != '\0' ; i++) {
         tmp = s[i] << 1;
         tmp |= bentFunc(tmp);
-        tmpKey = poli(tmp);
+        tmpKey = polynomial(tmp);
         key[i] = tmpKey;
         s[i] ^= tmpKey;
     }
