@@ -32,7 +32,7 @@ void encode(char *s, int key) {
             tmp |= bentFunc(tmp);
             tmpKey = polynomial(tmp);
             tmpVal = (int) pow(2, j);
-            res += (s[i] & tmpVal) ^ tmpKey;
+            res |= (s[i] & tmpVal) ^ tmpKey;
         }
         s[i] = (char) res;
     }
