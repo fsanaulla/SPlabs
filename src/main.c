@@ -1,19 +1,18 @@
 #include <malloc.h>
-#include <memory.h>
 #include "crypto/crypto.c"
+#include "math.h"
 
 int main() {
     int len;
     char test[] = "I Love VNTU(no)";
-    len = (int) strlen(test);
-    char key[len];
+    int key = 95;
+
 
     //encoding
-    encode((char *) &test, (char *) &key);
+    encode((char *) &test, key);
     printf("%s\n", test);
 
-    //decoding
-    decode((char *) &test, (char *) &key);
+    encode((char *) &test, key);
     printf("%s\n", test);
 
     return 0;
