@@ -1,4 +1,3 @@
-#include <math.h>
 #include <malloc.h>
 
 void encode(char *s, int key);
@@ -8,7 +7,7 @@ int bitsCount(int n);
 
 int main() {
     char test[] = "I Love VNTU(no)";
-    int key = 95;
+    int key = 123;
 
     printf("Оригінал: ");
     printf("%s\n", test);
@@ -18,45 +17,33 @@ int main() {
     encode((char *) &test, key);
     printf("%s\n", test);
 
+    //decoding
     printf("Дешифроване: ");
     encode((char *) &test, key);
     printf("%s\n", test);
 
-//    printf("%d\n", bitsCount(bentFunc(90)));
-//    printf("%d\n", polynomial(95));
-
     return 0;
 }
-
-struct BYTE {
-    unsigned first;
-    unsigned second;
-    unsigned third;
-    unsigned fourth;
-    unsigned fifth;
-    unsigned sixth;
-    unsigned seventh;
-    unsigned eighth;
-};
 
 void encode(char *s, int key) {
     int slicedKey = 0;
     int tmpKey = 0;
-    int encryptBit = 0
+    int encryptBit = 0;
 
     slicedKey = key << 1;
     tmpKey = slicedKey | bitsCount(polynomial(slicedKey));
     encryptBit = bitsCount(bentFunc(tmpKey));
-    printf("%d", encryptBit);
 
     for (int i = 0; s[i] != '\0'; i++) {
 
         int res = 0;
 
         for (int j = 0; j < 8; j++) {
-            res |= (s[i] & (1 << j)) ^ tmpKey;
+
+            res |= (((s[i] & (1 << j)) >> j) ^ encryptBit) << j;
+
         }
-        printf("%c\n", res);
+
         s[i] = (char) res;
     }
 }
