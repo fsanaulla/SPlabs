@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-int wordCount(char c[]) {
+int wordCount() {
     FILE *fp;
     char ch;
     int wn, state;
