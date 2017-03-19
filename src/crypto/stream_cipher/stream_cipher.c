@@ -9,16 +9,16 @@ int main() {
     char test[] = "I Love VNTU(no)";
     int key = 123;
 
-    printf("Оригінал: ");
+    printf("Original: ");
     printf("%s\n", test);
 
     //encoding
-    printf("Зашифроване: ");
+    printf("Encrypted: ");
     encode((char *) &test, key);
     printf("%s\n", test);
 
     //decoding
-    printf("Дешифроване: ");
+    printf("Decoded: ");
     encode((char *) &test, key);
     printf("%s\n", test);
 
