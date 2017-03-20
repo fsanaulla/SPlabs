@@ -1,2 +1,1 @@
-Laboratory works for information security
-    1.Stream cipher
+<b>Laboratory works for information security</b>
