@@ -2,64 +2,73 @@
 #include <memory.h>
 #include <malloc.h>
 
-typedef long long int int64;
+#define BYTE_SIZE 8
 
-
-void encode_des(char *str, char *key);
-int64 init_permutation(int64 n);
-int expansion(int n);
-void s_box(int n);
-int64 to_int64(char *str);
-char* to_char_array(int64 num);
+int64_t str_to_int64(char *str);
+char* int64_to_str(int64_t num);
+int64_t* str_to_pint64(char *str);
 
 
 int main() {
-    char *test = "fayazsan";
-    int64 res_int64 = to_int64(test);
-    printf("%lld\n", res_int64);
+    char* test = "fayazsan";
+    char* test1 = "faya";
+    char* test_long = "I Love that algorithm";
 
-    char *res_char = to_char_array(res_int64);
-    printf("%s\n", res_char);
+    int64_t* arr = str_to_pint64(test_long);
+    printf("%li\n", arr[0]);
+    printf("%li\n", arr[1]);
+    printf("%li\n", arr[2]);
+    printf("%d", (int) sizeof(arr));
 
-    free(res_char);
+    free(arr);
+
     return 0;
 };
 
-int64 to_int64(char *str) {
+int64_t str_to_int64(char *str) {
     int64_t num = 0;
-    for (int i = 0; i < 8; i++) {
-        num = (num << 8) | str[i];
+    for (int i = 0; i < strlen(str); i++) {
+        num = (num << BYTE_SIZE) | str[i];
     }
     return num;
 }
 
-char* to_char_array(int64 num) {
-    char* str = (char *) malloc(8);
-    for (int i = 0; i < 8; i++) {
-        str[7 - i] = (char) ((num >> i * 8) & 255);
+char* int64_to_str(int64_t num) {
+    char* str = (char *) malloc(BYTE_SIZE);
+    for (int i = 0; i < BYTE_SIZE; i++) {
+        str[7 - i] = (char) ((num >> i * BYTE_SIZE) & 255);
     }
     return str;
 }
-//todo: impl parser from string to array of int64
-int64 * to_array_of_int64(char *str) {
-//    int size = (int) (strlen(str) / 4);
-//    int64 *arr = (int64 *) malloc((size_t)(strlen(str) / 4));
-//    return arr;
-}
 
-void encode_des(char *str, char *key) {
+int64_t* str_to_pint64(char *str) {
+    size_t size = strlen(str);
+    int reminder = (int) (size % BYTE_SIZE);
+    int arr_size = (int) (size / BYTE_SIZE);
 
-}
+    int64_t* res_arr = (int64_t*) malloc((size_t)arr_size);
 
-int64 init_permutation(int64 n) {
-    int64 tmp = 0;
-    for (int i = 0; i < 64; i++) {
+    for (int i = 0; i < arr_size; i++) {
+        int index = BYTE_SIZE * i;
+        char* concat_ch = (char*) malloc(BYTE_SIZE);
+
+        for (int j = 0; j < BYTE_SIZE; j++) {
+            concat_ch[j] = str[index + j];
+        }
+
+        res_arr[i] = str_to_int64(concat_ch);
+
+        free(concat_ch);
     }
-    return tmp;
-}
 
-int expansion(int n) {
-    return n;
-}
+    if (reminder > 0) {
+        int resize = arr_size + 1;
+        char* rem = (char*) malloc((size_t) reminder);
 
-void s_box(int n) {}
+        strncpy(rem, str + arr_size * BYTE_SIZE, (size_t) reminder);
+        realloc(res_arr, (size_t) resize);
+        res_arr[resize - 1] = str_to_int64(rem);
+    }
+
+    return res_arr;
+}
