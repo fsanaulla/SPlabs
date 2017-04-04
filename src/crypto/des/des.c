@@ -1,26 +1,29 @@
 #include <stdint.h>
 #include <memory.h>
 #include <malloc.h>
-
-#define BYTE_SIZE 8
+#include "permutation.c"
 
 int64_t str_to_int64(char *str);
 char* int64_to_str(int64_t num);
 int64_t* str_to_pint64(char *str);
-
+int64_t init_permutation(int64_t num);
 
 int main() {
     char* test = "fayazsan";
     char* test1 = "faya";
     char* test_long = "I Love that algorithm";
 
-    int64_t* arr = str_to_pint64(test_long);
-    printf("%li\n", arr[0]);
-    printf("%li\n", arr[1]);
-    printf("%li\n", arr[2]);
-    printf("%d", (int) sizeof(arr));
+    int64_t test64 = str_to_int64(test);
+    printf("%li\n", test64);
+    printf("%li\n", init_permutation(test64));
 
-    free(arr);
+//    int64_t* arr = str_to_pint64(test_long);
+//    printf("%li\n", arr[0]);
+//    printf("%li\n", arr[1]);
+//    printf("%li\n", arr[2]);
+//    printf("%d", (int) sizeof(arr));
+//
+//    free(arr);
 
     return 0;
 };
@@ -71,4 +74,14 @@ int64_t* str_to_pint64(char *str) {
     }
 
     return res_arr;
+}
+
+int64_t init_permutation(int64_t num) {
+    int64_t res = 0;
+
+    for (int i = 0; i < BYTE_SIZE * 8; ++i) {
+        int index = initial_message_permutation[i];
+        res |= ((num & (1 << index)) >> index) << i;
+    }
+    return res;
 }
