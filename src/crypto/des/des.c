@@ -3,33 +3,40 @@
 #include <malloc.h>
 #include "des.h"
 
-int64_t str_to_int64(char *str);
-char* int64_to_str(int64_t num);
-int64_t* str_to_pint64(char *str);
-int64_t message_init_permutation(int64_t num);
-int64_t bloc_message_expansion(int num);
+uint64_t str_to_int64(char *str);
+char* int64_to_str(uint64_t num);
+uint64_t* str_to_pint64(char *str);
+uint64_t message_init_permutation(uint64_t num);
+uint64_t bloc_message_expansion(uint32_t num);
 
 int main() {
     char* test = "fayazsan";
     char* test1 = "faya";
     char* test_long = "I Love that algorithm";
+    uint32_t num = 1;
 
-    //todo: test
-    printf("%d\n", (int) test1);
-    printf("%li\n", bloc_message_expansion((int) test1));
+    printf("%d\n", message_expansion[0]);
+    printf("%li\n", bloc_message_expansion(num));
+    printf("%zu",sizeof(uint64_t));
 
     return 0;
 };
 
-int64_t str_to_int64(char *str) {
-    int64_t num = 0;
+/*
+ * char[8] to int64 conversion
+ */
+uint64_t str_to_int64(char *str) {
+    uint64_t num = 0;
     for (int i = 0; i < strlen(str); i++) {
         num = (num << BYTE_SIZE) | str[i];
     }
     return num;
 }
 
-char* int64_to_str(int64_t num) {
+/*
+ * int64 to char[8] pointer conversion
+ */
+char* int64_to_str(uint64_t num) {
     char* str = (char *) malloc(BYTE_SIZE);
     for (int i = 0; i < BYTE_SIZE; i++) {
         str[7 - i] = (char) ((num >> i * BYTE_SIZE) & 255);
@@ -37,12 +44,15 @@ char* int64_to_str(int64_t num) {
     return str;
 }
 
-int64_t* str_to_pint64(char *str) {
+/*
+ * string to int64 array conversion
+ */
+uint64_t* str_to_pint64(char *str) {
     size_t size = strlen(str);
     int reminder = (int) (size % BYTE_SIZE);
     int arr_size = (int) (size / BYTE_SIZE);
 
-    int64_t* res_arr = (int64_t*) malloc((size_t)arr_size);
+    uint64_t* res_arr = (uint64_t*) malloc((size_t)arr_size);
 
     for (int i = 0; i < arr_size; i++) {
         int index = BYTE_SIZE * i;
@@ -69,8 +79,11 @@ int64_t* str_to_pint64(char *str) {
     return res_arr;
 }
 
-int64_t message_init_permutation(int64_t num) {
-    int64_t res = 0;
+/*
+ * Initial message permutation on 8byte bloc
+ */
+uint64_t message_init_permutation(uint64_t num) {
+    uint64_t res = 0;
 
     for (int i = 0; i < BYTE_SIZE * 8; i++) {
         int index = initial_message_permutation[i];
@@ -79,20 +92,18 @@ int64_t message_init_permutation(int64_t num) {
     return res;
 }
 
-//todo: test function
-int64_t bloc_message_expansion(int num) {
-    int64_t res = 0;
+/*
+ * Message bloc expansion
+ */
+uint64_t bloc_message_expansion(uint32_t num) {
+    //todo: fix expansion
+    uint64_t res = 0;
+    int index = 0;
 
     for (int i = 0; i < BYTE_SIZE * 6; i++) {
-        int index = message_expansion[i];
-        res |= ((num & (1 << index)) >> index) << i;
+        index = message_expansion[i] - 1;
+        res |= ((num & (1 << index)) >> index) << i + 1;
     }
 
     return res;
-}
-
-int test_bloc_expansion(int test) {
-    int res = 0;
-
-    for
 }
