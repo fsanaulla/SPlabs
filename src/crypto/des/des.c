@@ -15,9 +15,7 @@ int main() {
     char* test_long = "I Love that algorithm";
     uint32_t num = 1;
 
-    printf("%d\n", message_expansion[0]);
-    printf("%li\n", bloc_message_expansion(num));
-    printf("%zu",sizeof(uint64_t));
+    printf("%li", bloc_message_expansion(num));
 
     return 0;
 };
@@ -96,13 +94,13 @@ uint64_t message_init_permutation(uint64_t num) {
  * Message bloc expansion
  */
 uint64_t bloc_message_expansion(uint32_t num) {
-    //todo: fix expansion
+    //todo: fix expansion, some type error(return 32768(1 << 15))
     uint64_t res = 0;
     int index = 0;
 
     for (int i = 0; i < BYTE_SIZE * 6; i++) {
         index = message_expansion[i] - 1;
-        res |= ((num & (1 << index)) >> index) << i + 1;
+        res |= ((num & (1 << index)) >> index) << i;
     }
 
     return res;
