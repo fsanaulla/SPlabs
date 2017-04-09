@@ -3,18 +3,11 @@
 #include <malloc.h>
 #include "des.h"
 
-uint64_t str_to_int64(char *str);
-char* int64_to_str(uint64_t num);
-uint64_t* str_to_pint64(char *str);
-uint64_t message_permutation(uint64_t num, int *perm_table);
-uint64_t bloc_message_expansion(uint32_t num);
-
 int main() {
     char* test = "fayazsan";
-    char* test1 = "faya";
-    char* test_long = "I Love that algorithm";
-    uint64_t t = str_to_int64(test);
+    char* test_key = "keykeyke";
 
+    printf("%d", s_boxes[1][33]);
     return 0;
 };
 
@@ -78,11 +71,11 @@ uint64_t* str_to_pint64(char *str) {
 /*
  * Message permutation on 8 byte bloc
  */
-uint64_t message_permutation(uint64_t num, int *perm_table) {
+uint64_t int64_bloc_permutation(uint64_t num, int res_bloc_size, int *perm_table) {
     uint64_t res = 0;
     int shift = 0;
 
-    for (int i = 0; i < INT_64_SIZE; i++) {
+    for (int i = 0; i < res_bloc_size; i++) {
         shift = perm_table[i] - 1;
         res |= ((num & (1L << shift)) >> shift) << i;
     }
@@ -96,14 +89,13 @@ uint32_t message_round_permutation(uint32_t num) {
     uint32_t res = 0;
     int shift = 0;
 
-    for (int i = 0; i < INT_32_SIZE; i++) {
+    for (int i = 0; i < BYTE_SIZE * 4; i++) {
         shift = round_permutation[i] - 1;
         res |= ((num & (1 << shift)) >> shift) << i;
     }
 
     return res;
 }
-
 
 /*
  * Message bloc expansion
@@ -112,10 +104,63 @@ uint64_t bloc_message_expansion(uint32_t num) {
     uint64_t res = 0;
     int shift = 0;
 
-    for (int i = 0; i < INT_48_SIZE; i++) {
+    for (int i = 0; i < BYTE_SIZE * 6; i++) {
         shift = message_expansion[i] - 1;
         res |= ((num & (1L << shift)) >> shift) << i;
     }
+
+    return res;
+}
+
+/*
+ * Generate round key
+ */
+uint64_t generate_round_key(uint64_t key_56, int round) {
+    uint64_t shifted_key = key_56 << key_shift_sizes[round];
+    return int64_bloc_permutation(shifted_key, BYTE_SIZE * 6, sub_key_permutation);
+}
+
+/*
+ * S box substitution
+ */
+uint32_t sbox_substitution(uint64_t bloc) {
+    //todo: fully impl s box substitution method
+    uint32_t res = 0;
+    int arr_6bit[8];
+    int arr_4bit[8];
+    int tmp = 0;
+    int shift = 0;
+    int tmpRow = 0;
+    int tmpColumn = 0;
+
+    for (int i = 0; i < 8; i++) {
+        tmp = 0;
+        shift = i * 6;
+        tmp |= ((bloc & (1 << shift)) >> shift) << 0;
+        tmp |= ((bloc & (1 << shift + 1)) >> shift + 1) << 1;
+        tmp |= ((bloc & (1 << shift + 2)) >> shift + 2) << 2;
+        tmp |= ((bloc & (1 << shift + 3)) >> shift + 3) << 3;
+        tmp |= ((bloc & (1 << shift + 4)) >> shift + 4) << 4;
+        tmp |= ((bloc & (1 << shift + 5)) >> shift + 5) << 5;
+
+        arr_6bit[i] = tmp;
+    }
+
+    for (int j = 0; j < 8; j++) {
+        tmpRow = 0;
+        tmpColumn = 0;
+
+        tmpRow |= (arr_6bit[j] & (1 << 0)) >> 1;
+        tmpRow |= ((arr_6bit[j] & (1 << 5)) >> 5) << 1;
+
+        tmpColumn |= (arr_6bit[j] & (1 << 1));
+        tmpColumn |= ((arr_6bit[j] & (1 << 2)) >> 2) << 1;
+        tmpColumn |= ((arr_6bit[j] & (1 << 3)) >> 3) << 2;
+        tmpColumn |= ((arr_6bit[j] & (1 << 4)) >> 4) << 3;
+
+        arr_4bit[j] = s_boxes[j][tmpRow * 16 + tmpColumn];
+    }
+
 
     return res;
 }
