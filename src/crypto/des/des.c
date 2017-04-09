@@ -6,16 +6,14 @@
 uint64_t str_to_int64(char *str);
 char* int64_to_str(uint64_t num);
 uint64_t* str_to_pint64(char *str);
-uint64_t message_init_permutation(uint64_t num);
+uint64_t message_permutation(uint64_t num, int *perm_table);
 uint64_t bloc_message_expansion(uint32_t num);
 
 int main() {
     char* test = "fayazsan";
     char* test1 = "faya";
     char* test_long = "I Love that algorithm";
-    uint32_t num = 1;
-
-    printf("%li\n", bloc_message_expansion(num));
+    uint64_t t = str_to_int64(test);
 
     return 0;
 };
@@ -78,17 +76,34 @@ uint64_t* str_to_pint64(char *str) {
 }
 
 /*
- * Initial message permutation on 8byte bloc
+ * Message permutation on 8 byte bloc
  */
-uint64_t message_init_permutation(uint64_t num) {
+uint64_t message_permutation(uint64_t num, int *perm_table) {
     uint64_t res = 0;
+    int shift = 0;
 
-    for (int i = 0; i < BYTE_SIZE * 8; i++) {
-        int index = initial_message_permutation[i];
-        res |= ((num & (1 << index)) >> index) << i;
+    for (int i = 0; i < INT_64_SIZE; i++) {
+        shift = perm_table[i] - 1;
+        res |= ((num & (1L << shift)) >> shift) << i;
     }
     return res;
 }
+
+/*
+ * Round message permutation on 4 byte bloc
+ */
+uint32_t message_round_permutation(uint32_t num) {
+    uint32_t res = 0;
+    int shift = 0;
+
+    for (int i = 0; i < INT_32_SIZE; i++) {
+        shift = round_permutation[i] - 1;
+        res |= ((num & (1 << shift)) >> shift) << i;
+    }
+
+    return res;
+}
+
 
 /*
  * Message bloc expansion
@@ -97,10 +112,12 @@ uint64_t bloc_message_expansion(uint32_t num) {
     uint64_t res = 0;
     int shift = 0;
 
-    for (int i = 0; i < BYTE_SIZE * 6; i++) {
+    for (int i = 0; i < INT_48_SIZE; i++) {
         shift = message_expansion[i] - 1;
         res |= ((num & (1L << shift)) >> shift) << i;
     }
 
     return res;
 }
+
+
