@@ -7,9 +7,13 @@ int main() {
     char* test = "fayazsan";
     char* test_key = "keykeyke";
 
-    printf("%d", s_boxes[1][33]);
+    uint64_t tmp = 25;
+
+    printf("%d", sbox_substitution(tmp));
+
     return 0;
 };
+
 
 /*
  * char[8] to int64 conversion
@@ -124,7 +128,7 @@ uint64_t generate_round_key(uint64_t key_56, int round) {
  * S box substitution
  */
 uint32_t sbox_substitution(uint64_t bloc) {
-    //todo: fully impl s box substitution method
+    //todo: fix response type(from long to int) + getting value from S_BOX
     uint32_t res = 0;
     int arr_6bit[8];
     int arr_4bit[8];
@@ -153,14 +157,22 @@ uint32_t sbox_substitution(uint64_t bloc) {
         tmpRow |= (arr_6bit[j] & (1 << 0)) >> 1;
         tmpRow |= ((arr_6bit[j] & (1 << 5)) >> 5) << 1;
 
-        tmpColumn |= (arr_6bit[j] & (1 << 1));
+        tmpColumn |= (arr_6bit[j] & (1 << 1)) >> 1;
         tmpColumn |= ((arr_6bit[j] & (1 << 2)) >> 2) << 1;
         tmpColumn |= ((arr_6bit[j] & (1 << 3)) >> 3) << 2;
         tmpColumn |= ((arr_6bit[j] & (1 << 4)) >> 4) << 3;
-
-        arr_4bit[j] = s_boxes[j][tmpRow * 16 + tmpColumn];
+        arr_4bit[j] = s_boxes[j][tmpRow][tmpColumn + 1];
     }
 
+    arr_4bit;
+
+    for (int k = 0; k < 8; k++) {
+        shift = k * 4;
+        res |= (arr_4bit[k] & (1 << 0)) << shift;
+        res |= ((arr_4bit[k] & (1 << 1)) >> 1) << shift + 1;
+        res |= ((arr_4bit[k] & (1 << 2)) >> 2) << shift + 2;
+        res |= ((arr_4bit[k] & (1 << 3)) >> 3) << shift + 3;
+    }
 
     return res;
 }
