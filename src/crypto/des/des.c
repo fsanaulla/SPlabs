@@ -9,8 +9,8 @@ int main() {
 
     uint64_t tmp = 25;
 
+    printf("%zu\n", sizeof(sbox_substitution(tmp)));
     printf("%d", sbox_substitution(tmp));
-
     return 0;
 };
 
@@ -154,14 +154,15 @@ uint32_t sbox_substitution(uint64_t bloc) {
         tmpRow = 0;
         tmpColumn = 0;
 
-        tmpRow |= (arr_6bit[j] & (1 << 0)) >> 1;
+        tmpRow |= arr_6bit[j] & 1;
         tmpRow |= ((arr_6bit[j] & (1 << 5)) >> 5) << 1;
 
         tmpColumn |= (arr_6bit[j] & (1 << 1)) >> 1;
         tmpColumn |= ((arr_6bit[j] & (1 << 2)) >> 2) << 1;
         tmpColumn |= ((arr_6bit[j] & (1 << 3)) >> 3) << 2;
         tmpColumn |= ((arr_6bit[j] & (1 << 4)) >> 4) << 3;
-        arr_4bit[j] = s_boxes[j][tmpRow][tmpColumn + 1];
+
+        arr_4bit[j] = s_boxes[j][tmpRow][tmpColumn];
     }
 
     arr_4bit;
