@@ -6,12 +6,17 @@
 int main() {
     char* test = "fayazsan";
     char* test_key = "keykeyke";
+    uint64_t l = 1484240542L;
 
-    des(test, test_key);
+//    des(test, test_key);
+    printf("%s", int64_to_str(l));
 
     return 0;
 };
 
+/*
+ * Split int64 to 2 separate int32
+ */
 uint32_t* split_int64(uint64_t num) {
     uint32_t* arr = (uint32_t*) malloc(2);
     arr[0] = (uint32_t) num >> 32;
@@ -123,7 +128,8 @@ uint64_t bloc_message_expansion(uint32_t num) {
 /*
  * Generate round key
  */
-uint64_t generate_round_key(uint64_t key_56, int round) {
+uint64_t generate_round_key(uint64_t key_64, int round) {
+    uint64_t key_56 = int64_bloc_permutation(key_64, BYTE_SIZE * 7, initial_key_permutation);
     uint64_t shifted_key = key_56 << key_shift_sizes[round];
     return int64_bloc_permutation(shifted_key, BYTE_SIZE * 6, sub_key_permutation);
 }
