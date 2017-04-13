@@ -7,13 +7,17 @@ int main() {
     char* test = "fayazsan";
     char* test_key = "keykeyke";
 
-    uint64_t tmp = 25;
+    des(test, test_key);
 
-    printf("%zu\n", sizeof(sbox_substitution(tmp)));
-    printf("%d", sbox_substitution(tmp));
     return 0;
 };
 
+uint32_t* split_int64(uint64_t num) {
+    uint32_t* arr = (uint32_t*) malloc(2);
+    arr[0] = (uint32_t) num >> 32;
+    arr[1] = (uint32_t) num;
+    return arr;
+}
 
 /*
  * char[8] to int64 conversion
@@ -128,7 +132,6 @@ uint64_t generate_round_key(uint64_t key_56, int round) {
  * S box substitution
  */
 uint32_t sbox_substitution(uint64_t bloc) {
-    //todo: fix response type(from long to int) + getting value from S_BOX
     uint32_t res = 0;
     int arr_6bit[8];
     int arr_4bit[8];
@@ -176,6 +179,79 @@ uint32_t sbox_substitution(uint64_t bloc) {
     }
 
     return res;
+}
+
+/*
+ * DES
+ */
+//TODO: FIX DES
+void des(char* message, char* key) {
+    //bitkey
+    uint64_t bit_key = str_to_int64(key);
+
+    size_t tmp_msg_size = strlen(message);
+    size_t msg_size = 0;
+
+    if (tmp_msg_size % 8 > 0) msg_size = tmp_msg_size / 8 + 1;
+    else msg_size = tmp_msg_size / 8;
+
+    uint64_t* message_int64 = str_to_pint64(message);
+
+    uint32_t left = 0;
+    uint32_t right = 0;
+    uint64_t final_result = 0;
+    uint64_t* res_int64_arr = (uint64_t*) malloc(msg_size);
+//    char* res_char_arr = (char*) malloc(8);
+
+
+    for (int i = 0; i < msg_size; i++) {
+        final_result = 0;
+
+        //INITIAL PERMUTATION
+        uint64_t permuted_bloc = int64_bloc_permutation(message_int64[i], BYTE_SIZE * 8, initial_permutation);
+
+        uint32_t* left_right = split_int64(permuted_bloc);
+        left = left_right[0];
+        right = left_right[1];
+
+        free(left_right);
+
+        for (int j = 0; j < 16; j++) {
+            // bloc expansion
+            uint64_t expanded = bloc_message_expansion(left);
+
+            //generate round key
+            uint64_t round_key = generate_round_key(bit_key, j);
+
+            //XOR round key with expansion
+            uint64_t xor_result = expanded ^ round_key;
+
+            //sbox substitution
+            uint32_t sbox_res = sbox_substitution(xor_result);
+
+            //round permutation
+            uint32_t permuted = message_round_permutation(sbox_res);
+
+            //XOR left part with right part
+            uint32_t xor_parts_result = left ^ permuted;
+
+            //Swapping
+            left = right;
+            right = xor_parts_result;
+        }
+
+        final_result |= (left << 32);
+        final_result |= right;
+
+        res_int64_arr[i] = final_result;
+    }
+
+    for (int k = 0; k < msg_size; k++) {
+        printf("%s", int64_to_str(res_int64_arr[k]));
+    }
+
+    free(res_int64_arr);
+    free(message_int64);
 }
 
 
