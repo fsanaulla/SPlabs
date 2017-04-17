@@ -2,8 +2,9 @@
 
 uint32_t* split_int64(uint64_t num);
 uint64_t str_to_int64(char *str);
-char* int64_to_str(uint64_t num);
+__u_char* int64_to_str(uint64_t* num);
 uint64_t* str_to_pint64(char *str);
+__u_char * pint64_to_string(uint64_t * parr, size_t _size);
 uint64_t int64_bloc_permutation(uint64_t num, int res_bloc_size, int *perm_table);
 uint64_t bloc_message_expansion(uint32_t num);
 uint64_t generate_round_key(uint64_t key_56, int round);

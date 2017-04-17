@@ -4,13 +4,15 @@
 #include "des.h"
 
 int main() {
-    char* test = "fayazsan";
+    char* test = "fayazsanaulla";
     char* test_key = "keykeyke";
-    uint64_t l = 1484240542L;
+    uint64_t l = 1923440L;
 
 //    des(test, test_key);
-    printf("%s", int64_to_str(l));
+    __u_char * res = pint64_to_string(str_to_pint64(test), 2);
+    printf("%s", res);
 
+    free(res);
     return 0;
 };
 
@@ -38,12 +40,8 @@ uint64_t str_to_int64(char *str) {
 /*
  * int64 to char[8] pointer conversion
  */
-char* int64_to_str(uint64_t num) {
-    char* str = (char *) malloc(BYTE_SIZE);
-    for (int i = 0; i < BYTE_SIZE; i++) {
-        str[7 - i] = (char) ((num >> i * BYTE_SIZE) & 255);
-    }
-    return str;
+__u_char * int64_to_str(uint64_t* num) {
+    return (__u_char *) num;
 }
 
 /*
@@ -81,6 +79,22 @@ uint64_t* str_to_pint64(char *str) {
     return res_arr;
 }
 
+/*
+ * pint64 to string
+ */
+__u_char * pint64_to_string(uint64_t * parr, size_t _size) {
+    //TODO: IMPL
+    size_t str_size = _size * BYTE_SIZE;
+    __u_char * result_string = (__u_char *) malloc(str_size);
+    int index = 0;
+
+//    for (int i = 0; i < _size; i++) {
+//        index = BYTE_SIZE * 0;
+//        result_string[index] =
+//    }
+
+    return result_string;
+}
 /*
  * Message permutation on 8 byte bloc
  */
@@ -190,7 +204,6 @@ uint32_t sbox_substitution(uint64_t bloc) {
 /*
  * DES
  */
-//TODO: FIX DES
 void des(char* message, char* key) {
     //bitkey
     uint64_t bit_key = str_to_int64(key);
@@ -253,7 +266,8 @@ void des(char* message, char* key) {
     }
 
     for (int k = 0; k < msg_size; k++) {
-        printf("%s", int64_to_str(res_int64_arr[k]));
+        printf("%s\n", "debug: -> printing");
+        printf("%s\n", int64_to_str(&res_int64_arr[k]));
     }
 
     free(res_int64_arr);
